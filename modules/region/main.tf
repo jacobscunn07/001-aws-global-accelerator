@@ -77,6 +77,17 @@ module "alb" {
       target_type              = "lambda"
       target_id                = module.lambda.lambda_function_arn
       attach_lambda_permission = true
+
+      health_check = {
+        enabled             = true
+        interval            = 35
+        path                = "/"
+        healthy_threshold   = 5
+        unhealthy_threshold = 2
+        timeout             = 30
+        protocol            = "HTTP"
+        matcher             = "200"
+      }
     }
   }
 }
@@ -85,10 +96,10 @@ module "lambda" {
   source  = "terraform-aws-modules/lambda/aws"
   version = "7.20.1"
 
-  function_name                = var.name
-  cloudwatch_logs_skip_destroy = true
-  handler                      = "lambda.handler"
-  runtime                      = "nodejs22.x"
+  function_name = var.name
+  #   cloudwatch_logs_skip_destroy = true
+  handler = "lambda.handler"
+  runtime = "nodejs22.x"
   source_path = [
     "${path.module}/lambda.mjs"
   ]
@@ -98,6 +109,7 @@ module "lambda" {
   attach_network_policy              = true
   replace_security_groups_on_destroy = true
   replacement_security_group_ids     = [module.vpc.default_security_group_id]
+  environment_variables              = var.lambda_environment_variables
 }
 
 output "alb_arn" {

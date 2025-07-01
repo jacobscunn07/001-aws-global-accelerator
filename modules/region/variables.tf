@@ -20,3 +20,8 @@ variable "private_subnets" {
   type    = list(string)
   default = []
 }
+
+variable "lambda_environment_variables" {
+  type    = map(string)
+  default = {}
+}

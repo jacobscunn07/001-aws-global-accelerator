@@ -50,6 +50,9 @@ module "region-us-east-1" {
   azs             = local.regions["us-east-1"]["azs"]
   public_subnets  = local.regions["us-east-1"]["public_subnets"]
   private_subnets = local.regions["us-east-1"]["private_subnets"]
+#   lambda_environment_variables = {
+#     FORCE_ERROR = 1
+#   }
 
   providers = {
     aws = aws.us-east-1
